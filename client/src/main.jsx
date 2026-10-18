@@ -4,16 +4,19 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import MobileShell from './components/MobileShell.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
+import { LanguageProvider } from './context/LanguageContext.jsx'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <MobileShell>
-          <App />
-        </MobileShell>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <MobileShell>
+            <App />
+          </MobileShell>
+        </AuthProvider>
+      </LanguageProvider>
     </BrowserRouter>
   </StrictMode>,
 )

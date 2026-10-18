@@ -40,6 +40,8 @@ import InterviewMediaSystem from './pages/InterviewMediaSystem'
 import SportsEPaperSystem from './pages/SportsEPaperSystem'
 import SuperScoring11 from './pages/SuperScoring11'
 import AdminPanel from './pages/AdminPanel'
+import AadhaarVerification from './pages/AadhaarVerification'
+import RoleProfile from './pages/RoleProfile'
 
 export default function App() {
   return (
@@ -114,6 +116,11 @@ export default function App() {
         <Route path="admin" element={<AdminPanel />} />
         <Route path="admin-panel" element={<AdminPanel />} />
         <Route path="module/admin" element={<AdminPanel />} />
+        <Route path="aadhaar" element={<AadhaarVerification />} />
+        <Route path="trust" element={<AadhaarVerification />} />
+        <Route path="verify-aadhaar" element={<AadhaarVerification />} />
+        <Route path="profile" element={<RoleProfile />} />
+        <Route path="account" element={<RoleProfile />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

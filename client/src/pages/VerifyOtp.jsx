@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ShieldCheck, Zap } from 'lucide-react'
 import Screen from '../components/Screen'
 import { DEMO_OTP } from '../data/demo'
 import { useAuth } from '../context/AuthContext'
+import { getRoleById } from '../data/rolesData'
 
 export default function VerifyOtp() {
   const navigate = useNavigate()
@@ -12,6 +14,8 @@ export default function VerifyOtp() {
   const [error, setError] = useState('')
   const [resendNotice, setResendNotice] = useState(false)
   const refs = useRef([])
+
+  const activeRole = getRoleById(draft.role || 'player')
 
   useEffect(() => {
     const t = setInterval(() => setSeconds((s) => (s > 0 ? s - 1 : 0)), 1000)
@@ -32,22 +36,32 @@ export default function VerifyOtp() {
     setTimeout(() => setResendNotice(false), 3500)
   }
 
+  function handleAutoFill() {
+    setDigits(['1', '2', '3', '4'])
+    setError('')
+  }
+
   function submit(e) {
     e.preventDefault()
     const code = digits.join('')
-    // Allow either demo OTP 1234 or any valid 4-digit code in test mode
+    // Allow demo OTP 1234 or 0000
     if (code !== DEMO_OTP && code !== '0000') {
       setError(`Incorrect OTP. Use ${DEMO_OTP} for test mode.`)
       return
     }
 
-    // Complete authentication and land directly into the app
+    // Complete authentication and navigate into the designated dashboard
     completeSignup({
+      phoneCode: draft.phoneCode || '+91',
       phone: draft.phone || '9876543210',
-      nickname: draft.nickname || 'Rohit_45',
+      nickname: draft.nickname || activeRole.defaultUser?.nickname || 'Rohit_45',
       city: draft.city || 'Chennai',
-      age: draft.age || '18',
-      kind: draft.kind || 'Player',
+      age: draft.age || '20',
+      role: draft.role || 'player',
+      roleCategory: draft.roleCategory || 'player',
+      roleDetails: draft.roleDetails || {},
+      verified: true,
+      trust: 94,
     })
 
     navigate('/app', { replace: true })
@@ -58,17 +72,50 @@ export default function VerifyOtp() {
       <div className="sh-auth-container">
         <div className="sh-auth-card">
           <h3 style={{ margin: 0, fontSize: 20, color: '#fff' }}>Verify your mobile</h3>
-          <p style={{ margin: '4px 0 10px', fontSize: 13, color: 'var(--sh-mu)' }}>
-            Enter the 4-digit code for <strong>+91 {draft.phone || '98765 43210'}</strong>.
+
+          <p style={{ margin: '4px 0 10px', fontSize: 13, color: 'var(--muted)' }}>
+            Enter 4-digit code sent to{' '}
+            <strong style={{ color: '#f4f7ff' }}>
+              {draft.phoneCode || '+91'} {draft.phone || '98765 43210'}
+            </strong>
           </p>
 
-          {/* Test Mode Card (From ScoringHeroes.html) */}
+          {/* Active Profile Info Banner */}
+          <div
+            style={{
+              padding: '8px 12px',
+              borderRadius: 8,
+              background: activeRole.accentBg,
+              border: `1px solid ${activeRole.color}40`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 12,
+            }}
+          >
+            <div>
+              <span style={{ fontSize: 10, color: 'var(--muted)', display: 'block' }}>ASSIGNED PROFILE</span>
+              <strong style={{ fontSize: 13, color: '#f4f7ff' }}>{activeRole.title}</strong>
+            </div>
+            <span className="pill" style={{ color: activeRole.color, borderColor: `${activeRole.color}55`, fontSize: 10 }}>
+              {activeRole.badge}
+            </span>
+          </div>
+
+          {/* Test Mode Card with 1-Tap Autofill */}
           <div className="sh-test-mode-card">
             <div className="sh-test-mode-title">Test mode: no SMS was sent</div>
             <div className="sh-test-mode-body">
-              The SMS service is not set up on the server yet, so your code is shown here:
-              <b className="sh-test-mode-code">{DEMO_OTP}</b>
+              Your test OTP code is: <b className="sh-test-mode-code">{DEMO_OTP}</b>
             </div>
+            <button
+              type="button"
+              className="btn btn--secondary btn--sm"
+              style={{ marginTop: 8, width: '100%', fontSize: 11, background: 'rgba(255,255,255,0.08)' }}
+              onClick={handleAutoFill}
+            >
+              ⚡ 1-Tap Autofill ({DEMO_OTP})
+            </button>
           </div>
 
           <form className="sh-form" onSubmit={submit}>
@@ -98,7 +145,7 @@ export default function VerifyOtp() {
             )}
 
             <button className="sh-btn-submit" type="submit">
-              Verify and continue
+              Confirm & Enter {activeRole.short} Dashboard →
             </button>
           </form>
 
@@ -117,16 +164,11 @@ export default function VerifyOtp() {
               type="button"
               onClick={() => navigate(-1)}
             >
-              Back
+              Back to Registration
             </button>
           </div>
-
-          <p style={{ fontSize: 11, color: 'var(--sh-mu)', margin: '8px 0 0', lineHeight: 1.4 }}>
-            On Android, tap Allow when Chrome offers to read the code. On iPhone, tap the code above the keyboard.
-          </p>
         </div>
       </div>
     </Screen>
   )
 }
-
