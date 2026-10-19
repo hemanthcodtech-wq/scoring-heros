@@ -1,15 +1,29 @@
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
-import { ArrowRight, UserRound, Briefcase, Zap, ShieldCheck } from 'lucide-react'
+import { Navigate, useNavigate, useLocation } from 'react-router-dom'
+import { ArrowRight, UserRound, Briefcase, Zap, ShieldCheck, Sparkles } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useLanguage } from '../context/LanguageContext'
 import LanguageSelector from '../components/LanguageSelector'
 import { OFFICIAL_ROLES, getRoleById } from '../data/rolesData'
+import FlashScreen from './FlashScreen'
 
-export default function Welcome() {
+export default function Welcome({ skipFlash = false }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, loginAsGuest } = useAuth()
   const { t } = useLanguage()
+
+  const [showFlash, setShowFlash] = useState(() => {
+    if (skipFlash) return false
+    if (location.state?.skipFlash) return false
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('skip') === '1' || params.get('skip') === 'true') {
+        return false
+      }
+    }
+    return true
+  })
 
   // Two main tabs: Player vs Officials
   const [roleCategory, setRoleCategory] = useState('player') // 'player' | 'official'
@@ -34,11 +48,24 @@ export default function Welcome() {
   }
 
   return (
-    <div className="sh-splash">
-      {/* Top Floating Language Selector */}
-      <div className="sh-welcome-lang-bar">
-        <LanguageSelector />
-      </div>
+    <>
+      {showFlash && (
+        <FlashScreen onFinish={() => setShowFlash(false)} />
+      )}
+      <div className="sh-splash">
+        {/* Top Floating Bar: Intro Replay & Language Selector */}
+        <div className="sh-welcome-lang-bar" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="sh-replay-intro-btn"
+            onClick={() => setShowFlash(true)}
+            title="Replay intro flash screen"
+          >
+            <Sparkles size={13} color="#ffd600" />
+            <span>Intro</span>
+          </button>
+          <LanguageSelector />
+        </div>
 
       {/* Light streaks across background */}
       <div className="sh-streaks">
@@ -151,5 +178,6 @@ export default function Welcome() {
         </div>
       </div>
     </div>
-  )
+  </>
+)
 }

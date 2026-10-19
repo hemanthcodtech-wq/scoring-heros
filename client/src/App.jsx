@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import AppLayout from './components/AppLayout'
 import RequireAuth from './components/RequireAuth'
 import Alerts from './pages/Alerts'
@@ -15,6 +15,7 @@ import Register from './pages/Register'
 import RoleSelect from './pages/RoleSelect'
 import VerifyOtp from './pages/VerifyOtp'
 import Welcome from './pages/Welcome'
+import FlashScreen from './pages/FlashScreen'
 import Avatar from './pages/Avatar'
 import AvatarCapture from './pages/AvatarCapture'
 import AvatarMapping from './pages/AvatarMapping'
@@ -43,10 +44,19 @@ import AdminPanel from './pages/AdminPanel'
 import AadhaarVerification from './pages/AadhaarVerification'
 import RoleProfile from './pages/RoleProfile'
 
+function SplashRoute() {
+  const navigate = useNavigate()
+  return <FlashScreen onFinish={() => navigate('/welcome', { replace: true })} />
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Welcome />} />
+      <Route path="/welcome" element={<Welcome skipFlash={true} />} />
+      <Route path="/splash" element={<SplashRoute />} />
+      <Route path="/flash" element={<SplashRoute />} />
+      <Route path="/preview-splash" element={<FlashScreen autoTransition={false} onFinish={() => {}} />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<VerifyOtp />} />

@@ -14556,12 +14556,38 @@ img { max-width: 100%; display: block; }
   line-height: 1.2;
 }
 
-/* Welcome Page Enhancements */
 .sh-welcome-lang-bar {
   position: absolute;
   top: max(16px, env(safe-area-inset-top, 16px));
   right: 16px;
   z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sh-replay-intro-btn {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.sh-replay-intro-btn:hover {
+  background: rgba(225, 29, 72, 0.85);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
 }
 .sh-welcome-actions-container {
   display: flex;
