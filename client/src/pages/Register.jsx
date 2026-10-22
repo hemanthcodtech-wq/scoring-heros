@@ -107,6 +107,10 @@ export default function Register() {
         setError('You must agree to the terms to continue.')
         return
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draft.email)) {
+        setError('Enter a valid email address to verify your account.')
+        return
+      }
     }
 
     setError('')
@@ -759,6 +763,7 @@ export default function Register() {
                   <input
                     type="email"
                     name="email"
+                    required
                     placeholder="contact@sports.com"
                     className="sh-input"
                     value={draft.email}

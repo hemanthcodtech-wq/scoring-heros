@@ -50,6 +50,11 @@ export default function VerifyOtp() {
       return
     }
 
+    if (draft.mode === 'register' && draft.email) {
+      navigate('/verify-email')
+      return
+    }
+
     // Complete authentication and navigate into the designated dashboard
     completeSignup({
       phoneCode: draft.phoneCode || '+91',

@@ -14,6 +14,7 @@ import ProfileSetup from './pages/ProfileSetup'
 import Register from './pages/Register'
 import RoleSelect from './pages/RoleSelect'
 import VerifyOtp from './pages/VerifyOtp'
+import VerifyEmail from './pages/VerifyEmail'
 import Welcome from './pages/Welcome'
 import FlashScreen from './pages/FlashScreen'
 import Avatar from './pages/Avatar'
@@ -60,6 +61,7 @@ export default function App() {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<VerifyOtp />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/email" element={<EmailSetup />} />
       <Route path="/profile" element={<ProfileSetup />} />
       <Route path="/role" element={<RoleSelect />} />
